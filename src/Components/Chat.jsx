@@ -23,7 +23,8 @@ const Chat = () => {
   };
 
   return (
-    <div className="chat-container">
+    <section className="chat-container">
+      <h1>Periódicos Talk</h1>
       <div className="chat-messages">
         {messages.map((msg, index) => (
           <div
@@ -47,7 +48,7 @@ const Chat = () => {
           Enviar
         </button>
       </div>
-    </div>
+    </section>
   );
 };
 
