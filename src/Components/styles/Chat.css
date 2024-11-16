@@ -1,66 +1,100 @@
 .chat-container {
+  background-color: #FFFFFF; /* Fundo mais limpo */
   display: flex;
   flex-direction: column;
-  max-width: 600px;
+  max-width: 400px; /* Layout compacto e amigável */
   margin: auto;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 2px solid #E0E0E0;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra moderna */
   padding: 16px;
   position: fixed;
-  bottom: 8px;
+  bottom: 16px;
   right: 16px;
-  font-size: 18px;
+  font-size: 16px;
+  font-family: "Arial", sans-serif;
+  color: #333333; /* Texto mais amigável */
+}
+
+.chat-container h1 {
+  font-size: 24px;
+  color: #0051A2;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.chat-container h2 {
+  font-size: 16px;
+  color: #666666;
+  text-align: center;
+  margin-bottom: 16px;
 }
 
 .chat-messages {
   flex: 1;
   overflow-y: auto;
   margin-bottom: 16px;
+  padding-right: 8px;
 }
 
 .message {
   margin: 8px 0;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 16px;
+  font-size: 16px;
+  line-height: 1.4;
+  max-width: 80%; /* Para mensagens mais compactas */
+  word-wrap: break-word;
 }
 
 .message.user {
-  background-color: #d4f1f4;
+  background-color: #D0F0FD; /* Azul claro para o usuário */
+  color: #0051A2;
   align-self: flex-end;
 }
 
 .message.bot {
-  background-color: #f1d4d4;
+  background-color: #FCE7E7; /* Vermelho claro para o bot */
+  color: #A20000;
   align-self: flex-start;
 }
 
-.chat-input {
-  display: flex;
-  gap: 8px;
-}
-
-.chat-input input {
-  flex: 1;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-}
-
-.chat-input button {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
+.start-button {
+  background-color: #0051A2;
   border: none;
-  border-radius: 4px;
+  border-radius: 20px;
+  color: #FFFFFF;
   cursor: pointer;
+  font-size: 18px;
+  padding: 14px 20px;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
-.voice-input button {
-  margin-top: 8px;
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
+.start-button:hover {
+  background-color: #003D7A; /* Efeito de hover */
+}
+
+.start-button:focus {
+  outline: 3px solid #FFD700; /* Foco visível para acessibilidade */
+}
+
+.start-button:disabled {
+  background-color: #D3D3D3; /* Indicação de botão desabilitado */
+  cursor: not-allowed;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: #CCCCCC;
+  border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: #AAAAAA;
 }
