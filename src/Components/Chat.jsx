@@ -1,25 +1,64 @@
-import React, { useState } from "react";
-import VoiceInput from "./VoiceInput";
+import React, { useState, useEffect } from "react";
 import "/src/Components/styles/Chat.css";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
+  const [isListening, setIsListening] = useState(false);
+  const recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const synth = window.speechSynthesis;
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  useEffect(() => {
+    if (!recognition) {
+      alert("Seu navegador não suporta reconhecimento de voz.");
+      return;
+    }
 
-    const userMessage = { role: "user", content: input };
+    const speechRecognition = new recognition();
+    speechRecognition.lang = "pt-BR";
+    speechRecognition.interimResults = false;
+
+    // Processar o que o usuário diz
+    speechRecognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript.trim();
+      processUserMessage(transcript);
+    };
+
+    speechRecognition.onend = () => {
+      if (isListening) {
+        speechRecognition.start(); // Reinicia para fluxo contínuo
+      }
+    };
+
+    if (isListening) {
+      speechRecognition.start();
+    } else {
+      speechRecognition.stop();
+    }
+
+    return () => speechRecognition.abort();
+  }, [isListening]);
+
+  const processUserMessage = (message) => {
+    const userMessage = { role: "user", content: message };
     setMessages((prev) => [...prev, userMessage]);
 
     // Simular resposta da IA
-    const botMessage = { role: "bot", content: "Buscando resultados..." };
-    setMessages((prev) => [...prev, botMessage]);
+    const botResponse = { role: "bot", content: "Buscando resultados..." };
+    setMessages((prev) => [...prev, botResponse]);
 
-    // TODO:Integrar com backend futuramente
-    // const response = await axios.post('/api/chat', { message: input });
+    speak(botResponse.content);
+  };
 
-    setInput("");
+  const speak = (text) => {
+    if (synth.speaking) synth.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "pt-BR";
+    synth.speak(utterance);
+  };
+
+  const handleStartListening = () => {
+    setIsListening(true);
+    speak("Bem-vindo ao Periódicos Talk! O que você deseja pesquisar?");
   };
 
   return (
@@ -35,19 +74,15 @@ const Chat = () => {
           </div>
         ))}
       </div>
-      <VoiceInput setInput={setInput} />
-      <div className="chat-input">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Digite sua mensagem..."
-          aria-label="Campo de texto para enviar mensagens"
-        />
-        <button onClick={handleSend} aria-label="Enviar mensagem">
-          Enviar
+      {!isListening && (
+        <button
+          onClick={handleStartListening}
+          aria-label="Iniciar interação por voz"
+          className="start-button"
+        >
+          Iniciar
         </button>
-      </div>
+      )}
     </section>
   );
 };
