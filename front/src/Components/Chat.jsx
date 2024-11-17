@@ -42,30 +42,44 @@ const Chat = () => {
     const userMessage = { role: "user", content: message };
     setMessages((prev) => [...prev, userMessage]);
 
-    try {
-      const response = await axios.post("http://localhost:5000/search", {
-        query: message,
-      });
+    // Simula a resposta do bot de acordo com a mensagem do usuário
+    const simulatedResponse = simulateBotResponse(message);
 
-      const botResponse = {
-        role: "bot",
-        content: response.data
-          .map(
-            (result, index) =>
-              `${index + 1}. ${result.title} (${result.year}) - ${result.citations} citações`
-          )
-          .join("\n"),
-      };
+    const botResponse = {
+      role: "bot",
+      content: simulatedResponse,
+    };
 
-      setMessages((prev) => [...prev, botResponse]);
-      speak(botResponse.content);
-    } catch (error) {
-      const botResponse = {
-        role: "bot",
-        content: "Ocorreu um erro ao buscar os resultados. Tente novamente.",
-      };
-      setMessages((prev) => [...prev, botResponse]);
-      speak(botResponse.content);
+    setMessages((prev) => [...prev, botResponse]);
+    speak(botResponse.content);
+  };
+
+  // Função para simular uma resposta mais completa, com orientações passo a passo
+  const simulateBotResponse = (message) => {
+    if (message.includes("pesquisar")) {
+      return (
+        "Ótimo! Vamos começar a pesquisa. Sobre qual área de pesquisa você gostaria de saber mais? Por exemplo: 'educação', 'saúde', 'tecnologia', etc."
+      );
+    } else if (message.includes("educação")) {
+      return (
+        "Você escolheu a área de Educação. Que tipo de pesquisa você procura? Artigos, dissertações, teses? Ou quer ver os mais citados?"
+      );
+    } else if (message.includes("artigos")) {
+      return (
+        "Certo! Vou procurar por artigos na área de Educação. Por favor, aguarde um momento..."
+      );
+    } else if (message.includes("tecnologia")) {
+      return (
+        "Você escolheu a área de Tecnologia. Podemos procurar artigos, dissertações ou teses. O que você prefere?"
+      );
+    } else if (message.includes("resultados")) {
+      return (
+        "Aqui estão alguns resultados na área de Educação:\n1. Artigo sobre Inovações em Ensino (2023) - 230 citações\n2. Artigo sobre Tecnologia Educacional (2022) - 450 citações\n3. Estudo sobre Inclusão Digital (2021) - 150 citações"
+      );
+    } else {
+      return (
+        "Desculpe, não entendi sua pergunta. Você pode me dizer sobre qual área de pesquisa você gostaria de saber mais?"
+      );
     }
   };
 
