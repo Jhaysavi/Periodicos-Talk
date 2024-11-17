@@ -8,16 +8,17 @@ import spacy
 import time
 import regex as re
 
-app = Flask(__name__, static_folder="static")
-app = Flask(__name__)
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))  # Caminho até a raiz do projeto
+
+app = Flask(__name__, static_folder=os.path.join(BASE_DIR, "static"))
 
 # Servir o arquivo `index.html` da raiz do projeto
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve(path):
-    if path != "" and os.path.exists(path):
-        return send_from_directory(".", path)  # Servir o arquivo estático solicitado
-    return send_from_directory(".", "index.html")  # Servir o `index.html` por padrão
+    if path != "" and os.path.exists(os.path.join(BASE_DIR, path)):
+        return send_from_directory(BASE_DIR, path)  # Servir outros arquivos da raiz
+    return send_from_directory(BASE_DIR, "index.html")  # Servir o index.html por padrão
 
 if __name__ == "__main__":
     app.run(debug=True)
