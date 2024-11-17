@@ -1,4 +1,5 @@
 #importar bibliotecas
+from flask import Flask, send_from_directory
 from pyalex import Works
 import os
 from google.cloud import texttospeech
@@ -6,6 +7,22 @@ import speech_recognition as sr
 import spacy
 import time
 import regex as re
+
+app = Flask(__name__, static_folder="static")
+app = Flask(__name__)
+
+# Servir o arquivo `index.html` da raiz do projeto
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve(path):
+    if path != "" and os.path.exists(path):
+        return send_from_directory(".", path)  # Servir o arquivo estático solicitado
+    return send_from_directory(".", "index.html")  # Servir o `index.html` por padrão
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+
 
 
 nlp = spacy.load("pt_core_news_sm")
@@ -15,7 +32,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Carregar o caminho da chave JSON
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:\\Users\\User\\Documents\\capes\\meu_ambiente\\animated-tracer-441904-d6-14d7e3815934.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "meu_ambiente\\key.json"
 
 # Inicializar clientes
 tts_client = texttospeech.TextToSpeechClient()

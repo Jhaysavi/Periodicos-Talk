@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Ignorar chave JSON
+key.json
+meu_ambiente/key.json
