@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "/src/Components/styles/Chat.css";
 
 const Chat = () => {
@@ -17,7 +18,6 @@ const Chat = () => {
     speechRecognition.lang = "pt-BR";
     speechRecognition.interimResults = false;
 
-    // Processar o que o usuário diz
     speechRecognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript.trim();
       processUserMessage(transcript);
@@ -38,15 +38,35 @@ const Chat = () => {
     return () => speechRecognition.abort();
   }, [isListening]);
 
-  const processUserMessage = (message) => {
+  const processUserMessage = async (message) => {
     const userMessage = { role: "user", content: message };
     setMessages((prev) => [...prev, userMessage]);
 
-    // Simular resposta da IA
-    const botResponse = { role: "bot", content: "Buscando resultados..." };
-    setMessages((prev) => [...prev, botResponse]);
+    try {
+      const response = await axios.post("http://localhost:5000/search", {
+        query: message,
+      });
 
-    speak(botResponse.content);
+      const botResponse = {
+        role: "bot",
+        content: response.data
+          .map(
+            (result, index) =>
+              `${index + 1}. ${result.title} (${result.year}) - ${result.citations} citações`
+          )
+          .join("\n"),
+      };
+
+      setMessages((prev) => [...prev, botResponse]);
+      speak(botResponse.content);
+    } catch (error) {
+      const botResponse = {
+        role: "bot",
+        content: "Ocorreu um erro ao buscar os resultados. Tente novamente.",
+      };
+      setMessages((prev) => [...prev, botResponse]);
+      speak(botResponse.content);
+    }
   };
 
   const speak = (text) => {
@@ -71,7 +91,9 @@ const Chat = () => {
             key={index}
             className={`message ${msg.role === "user" ? "user" : "bot"}`}
           >
-            {msg.content}
+            {msg.content.split("\n").map((line, i) => (
+              <p key={i}>{line}</p>
+            ))}
           </div>
         ))}
       </div>
