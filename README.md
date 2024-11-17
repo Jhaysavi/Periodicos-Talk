@@ -14,6 +14,7 @@ O **Periódicos Talk** é um protótipo de **assistente de voz inclusivo**, dese
 
 ### **Back-End**
 - Python (Flask para a API)
+- Open Alex
 
 ---
 
