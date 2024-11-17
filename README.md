@@ -81,7 +81,7 @@ cd periodicos-talk
 
 4. Inicie o servidor:
    ```bash
-   python app.py
+   python meu_ambiente/scripts/app.py
    ```
 
 5. O back-end estará disponível em:  
