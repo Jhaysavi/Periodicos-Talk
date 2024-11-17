@@ -115,7 +115,7 @@ def fazer_perguntas():
         falar("Ainda não indexamos esse idioma. Poderia responder entre Português, inglês, espanhol ou francês?")
 
     resumo_respostas = ", ".join([resposta for resposta in respostas if resposta])
-    falar(f"Perfeito! Estarei buscando artigos sobre: {resumo_respostas}.")
+    falar(f"Perfeito! Estarei buscando os 5 artigos mais citados sobre: {resumo_respostas}.")
     print(f"Respostas coletadas: {respostas}")
     return respostas
 
